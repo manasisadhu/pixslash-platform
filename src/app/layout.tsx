@@ -1,13 +1,9 @@
 import Header from "@/components/Header/Header";
 import ThemeProvider from "@/components/Providers/ThemeProvider";
 import { geistSans } from "@/lib/fonts";
+import { RootLayoutProps } from "@/lib/type";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
 import "./globals.css";
-
-type RootLayoutProps = Readonly<{
-  children: ReactNode;
-}>;
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
