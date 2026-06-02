@@ -13,7 +13,7 @@ export const registerSchema = z
     password: z
       .string()
       .min(8, "Passsword must be at least 8 characters long")
-      .max(128, { error: "Name must not exceed 32 characters" }),
+      .max(128, { error: "Passsword must not exceed 128 characters" }),
     confirmPassword: z
       .string()
       .min(1, { error: "Please confirm your password" }),
@@ -22,3 +22,12 @@ export const registerSchema = z
     error: "Password didn't match",
     path: ["confirmPassword"],
   });
+
+export const loginSchema = z.object({
+  emailAddress: z.email({ error: "Please provide a valid email address" }),
+  password: z
+    .string()
+    .min(8, "Passsword must be at least 8 characters long")
+    .max(128, { error: "password must not exceed 128 characters" }),
+  rememberMe: z.boolean(),
+});
