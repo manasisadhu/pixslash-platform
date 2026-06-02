@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const page = () => {
   return (
-    <section className="grid h-dvh place-items-center">
+    <section className="grid h-[90dvh] place-items-center">
       <div className="space-y-4 text-center">
         <h1 className="text-5xl font-semibold">
           Pixslash Wallpaper Application
