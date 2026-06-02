@@ -1,3 +1,11 @@
+import RegisterForm from "@/components/Auth/RegisterForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/shadcnui/card";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +17,19 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <section className="grid h-dvh place-items-center">
-      <h1 className="text-5xl font-semibold">Register page</h1>
+      <Card className="w-auto md:w-100">
+        <CardHeader>
+          <CardTitle className="text-xl md:text-2xl">
+            Create an account
+          </CardTitle>
+          <CardDescription className="text-sm md:text-lg">
+            Enter your information below to create your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RegisterForm />
+        </CardContent>
+      </Card>
     </section>
   );
 };
