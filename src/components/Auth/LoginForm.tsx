@@ -1,8 +1,10 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { LoginSchemaType } from "@/lib/type";
 import { loginSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Route } from "next";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -16,8 +18,14 @@ import {
 import { Input } from "../shadcnui/input";
 import { Spinner } from "../shadcnui/spinner";
 
-const LoginForm = () => {
-  const { push } = useRouter();
+const isSafeRedirect = (dest: string): boolean =>
+  dest.startsWith("/") &&
+  !dest.startsWith("//") &&
+  !dest.includes("://") &&
+  !dest.includes("@");
+
+const LoginForm = ({ returnTo }: { returnTo?: string }) => {
+  const { replace } = useRouter();
 
   const {
     handleSubmit,
@@ -30,24 +38,41 @@ const LoginForm = () => {
     defaultValues: {
       emailAddress: "",
       password: "",
+      rememberMe: false,
     },
 
     mode: "onSubmit",
   });
 
-  const submitLoginData = async (lData: LoginSchemaType) => {
-    await new Promise<void>((r) => setTimeout(r, 1800)); // test spinner
+  const submitLoginData = async ({
+    emailAddress,
+    password,
+    rememberMe,
+  }: LoginSchemaType) => {
+    try {
+      const { error } = await authClient.signIn.email({
+        email: emailAddress,
+        password,
+        rememberMe,
+      });
 
-    // test the workflow of user login form
-    if (!lData) {
-      console.error("User login failed!");
-      toast.error("User login failed!");
-    } else {
-      console.log(lData);
-      console.log("User login successfully!");
-      toast.success("User login successfully!");
-      reset();
-      push("/contribution");
+      if (error) {
+        console.error(error);
+        toast.error("Login failed. Please try again.");
+      } else {
+        toast.success("Login successful!");
+
+        reset();
+
+        replace(
+          (returnTo && isSafeRedirect(returnTo) ? returnTo : (
+            "/contribution"
+          )) as Route,
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Login failed. Please try again.");
     }
   };
 
@@ -95,6 +120,23 @@ const LoginForm = () => {
 
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
+        )}
+      />
+
+      {/* Remember Me checkbox */}
+      <Controller
+        name="rememberMe"
+        control={control}
+        render={({ field }) => (
+          <label className="text-muted-foreground flex cursor-pointer items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={field.value}
+              onChange={field.onChange}
+              className="border-border bg-background text-primary accent-primary size-4 rounded"
+            />
+            Remember me
+          </label>
         )}
       />
 
