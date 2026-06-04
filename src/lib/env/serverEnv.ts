@@ -27,6 +27,14 @@ export const serverEnv = createEnv({
     GOOGLE_CLIENT_SECRET: z
       .string()
       .min(1, { error: "GOOGLE_CLIENT_SECRET is required" }),
+
+    FACEBOOK_CLIENT_ID: z
+      .string()
+      .min(1, { error: "FACEBOOK_CLIENT_ID is required" }),
+
+    FACEBOOK_CLIENT_SECRET: z
+      .string()
+      .min(1, { error: "FACEBOOK_CLIENT_SECRET is required" }),
   },
   experimental__runtimeEnv: process.env,
 });
