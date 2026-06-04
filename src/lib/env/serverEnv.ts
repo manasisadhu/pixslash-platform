@@ -19,6 +19,14 @@ export const serverEnv = createEnv({
     CHECKPOINT_DISABLE: z.enum(["1", "0"]).optional(),
 
     BETTER_AUTH_TELEMETRY: z.enum(["1", "0"]).optional(),
+
+    GOOGLE_CLIENT_ID: z.string().endsWith(".apps.googleusercontent.com", {
+      error: "Invalid GOOGLE_CLIENT_ID",
+    }),
+
+    GOOGLE_CLIENT_SECRET: z
+      .string()
+      .min(1, { error: "GOOGLE_CLIENT_SECRET is required" }),
   },
   experimental__runtimeEnv: process.env,
 });

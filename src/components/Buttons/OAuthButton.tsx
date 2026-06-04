@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { Button } from "../shadcnui/button";
 
 type Provider = "google" | "facebook";
@@ -10,10 +11,19 @@ type OAuthButtonProps = {
 };
 
 const OAuthButton = ({ label, socialProviders }: OAuthButtonProps) => {
+  const socialLoginHandeler = async () => {
+    await authClient.signIn.social({
+      provider: socialProviders,
+      callbackURL: "/contribution",
+    });
+  };
+
   return (
     <Button
+      type="button"
       className="cursor-pointer"
-      variant="outline">
+      variant="outline"
+      onClick={socialLoginHandeler}>
       {socialProviders === "google" ?
         <>
           {/* google icon svg  */}
