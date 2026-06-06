@@ -21,8 +21,11 @@ model User {
   updatedAt     DateTime @updatedAt
 
   // Relations
-  sessions Session[]
-  accounts Account[]
+  sessions   Session[]
+  accounts   Account[]
+  wallpapers Wallpaper[]
+  likes      Like[]
+  comments   Comment[]
 
   @@unique([email])
   @@map("user")
@@ -65,7 +68,6 @@ model Account {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  @@index([userId])
   @@map("account")
 }
 
@@ -79,4 +81,99 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Wallpaper {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  thumbnailUrl String?
+  imageUrl     String
+  width        Int?
+  height       Int?
+  fileSize     Int?
+  format       String?
+  isPublic     Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations 
+  userId        String?
+  user          User?          @relation(fields: [userId], references: [id])
+  likes         Like[]
+  comments      Comment[]
+  wallpaperTags WallpaperTag[]
+  catagory      Catagory?      @relation(fields: [catagoryId], references: [id])
+  catagoryId    String?
+
+  @@index([catagoryId])
+  @@index([userId])
+  @@index([isPublic])
+  @@index([isFeatured])
+  @@map("wallpaper")
+}
+
+model Catagory {
+  id           String @id @default(uuid())
+  catagoryName String @unique
+
+  wallpapers Wallpaper[]
+
+  @@map("catagory")
+}
+
+model Tag {
+  id    String @id @default(uuid())
+  title String
+  slug  String
+
+  // Relations 
+  wallpaper WallpaperTag[]
+
+  @@map("tag")
+}
+
+model WallpaperTag {
+  wallpaperId String
+  tagId       String
+
+  // Relations 
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+
+  @@id([wallpaperId, tagId])
+  @@index([wallpaperId])
+  @@index([tagId])
+  @@map("wallpapertag")
+}
+
+model Like {
+  userId      String
+  wallpaperId String
+  createdAt   DateTime @default(now())
+
+  // Relations 
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id])
+
+  @@id([userId, wallpaperId])
+  @@index([wallpaperId])
+  @@map("like")
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  userId      String
+  wallpaperId String
+  opinion     String
+  createdAt   DateTime @default(now())
+
+  // Relations 
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+
+  @@index([wallpaperId])
+  @@index([userId])
+  @@map("comment")
 }
