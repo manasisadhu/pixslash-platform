@@ -115,8 +115,9 @@ model Wallpaper {
 }
 
 model Catagory {
-  id           String @id @default(uuid())
-  catagoryName String @unique
+  id           String  @id @default(uuid())
+  catagoryName String  @unique
+  image        String?
 
   wallpapers Wallpaper[]
 
