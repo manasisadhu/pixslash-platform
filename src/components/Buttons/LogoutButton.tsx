@@ -1,12 +1,13 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "../shadcnui/button";
 
 const LogoutButton = () => {
-  const { replace } = useRouter();
+  const { replace, refresh } = useRouter();
 
   const logoutHandler = async () => {
     try {
@@ -18,6 +19,7 @@ const LogoutButton = () => {
       } else {
         toast.success("Logged out successfully.");
         replace("/");
+        refresh();
       }
     } catch (err) {
       console.error(err);
@@ -28,8 +30,10 @@ const LogoutButton = () => {
   return (
     <Button
       type="button"
-      className="bg-red-500 text-white hover:bg-red-400"
+      variant="destructive"
+      className="w-full"
       onClick={logoutHandler}>
+      <LogOutIcon />
       Logout
     </Button>
   );

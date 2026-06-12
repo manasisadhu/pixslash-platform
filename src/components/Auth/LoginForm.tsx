@@ -66,7 +66,7 @@ const LoginForm = ({ returnTo }: { returnTo?: string }) => {
 
         replace(
           (returnTo && isSafeRedirect(returnTo) ? returnTo : (
-            "/contribution"
+            "/overview"
           )) as Route,
         );
       }
