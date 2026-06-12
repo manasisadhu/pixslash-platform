@@ -1,6 +1,7 @@
 "use client";
 import { authClient } from "@/lib/auth-client";
 import { ChevronDownIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LogoutButton from "../Buttons/LogoutButton";
@@ -30,12 +31,15 @@ const PrivateHeader = () => {
         <nav className="flex items-center gap-2">
           <SidebarTrigger className="max-md:text-foreground" />
           <Separator orientation="vertical" />
-          <Link href={"/"}>
-            <h1
-              className="text-2xl font-semibold"
-              aria-label="App Name">
-              PixSlash
-            </h1>
+          <Link href={"/overview"}>
+            <Image
+              src="/logo.png"
+              height={100}
+              width={100}
+              alt="App-Logo"
+              priority
+              className="h-8 w-full"
+            />
           </Link>
         </nav>
 

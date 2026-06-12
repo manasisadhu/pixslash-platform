@@ -71,9 +71,9 @@ const AppSidebar = ({ userId }: AppSidebarProps) => {
               size="lg"
               render={<Link href={"/" as Route} />}>
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl">
-                <LayoutDashboardIcon className="size-4" />
+                P
               </div>
-              <span className="font-semibold">Pixslash</span>
+              <span className="text-xl font-semibold">Pixslash</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
