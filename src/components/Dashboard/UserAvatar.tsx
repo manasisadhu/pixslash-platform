@@ -1,7 +1,7 @@
 import { UserAvatarProps } from "@/lib/type";
-import { Avatar, AvatarFallback, AvatarImage } from "../shadcnui/avatar";
+import { Avatar, AvatarFallback } from "../shadcnui/avatar";
 
-const UserAvatar = ({ image, name }: UserAvatarProps) => {
+const UserAvatar = ({ name }: UserAvatarProps) => {
   const initials =
     name?.trim() ?
       name
@@ -15,11 +15,11 @@ const UserAvatar = ({ image, name }: UserAvatarProps) => {
 
   return (
     <Avatar size="sm">
-      <AvatarImage
+      {/* <AvatarImage
         src={`/public/${image}`}
         height={24}
         width={24}
-      />
+      /> */}
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>
   );

@@ -22,7 +22,7 @@ export type SideBarNavItemType = {
 };
 
 export type AppSidebarProps = {
-  userId: string | null;
+  userId: string;
 };
 
 export type UserAvatarProps = {
