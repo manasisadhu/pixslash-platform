@@ -14,7 +14,11 @@ const authenticUser = async () => {
       data: session,
     };
   } catch (error) {
-    console.error(error);
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.error("authenticUser.getSession failed", {
+      message,
+    });
 
     return {
       isSuccess: false,
