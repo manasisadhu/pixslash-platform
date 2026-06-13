@@ -1,12 +1,24 @@
-import PrivetHeader from "@/components/Header/PrivetHeader";
-import { RootLayoutProps } from "@/lib/type";
+import AppSidebar from "@/components/Dashboard/AppSidebar";
+import PrivateHeader from "@/components/Header/PrivateHeader";
+import { SidebarInset, SidebarProvider } from "@/components/shadcnui/sidebar";
+import { LayoutChildrenProps } from "@/lib/type";
+import authenticUser from "@/server/authenticUser";
+import { redirect } from "next/navigation";
 
-const PrivetLayout = ({ children }: RootLayoutProps) => {
+const PrivetLayout = async ({ children }: LayoutChildrenProps) => {
+  const { data } = await authenticUser();
+
+  if (!data) {
+    redirect("/login");
+  }
   return (
-    <>
-      <PrivetHeader />
-      <main className="mx-auto max-w-7xl">{children}</main>
-    </>
+    <SidebarProvider>
+      <AppSidebar userId={data.user.id} />
+      <SidebarInset>
+        <PrivateHeader />
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 

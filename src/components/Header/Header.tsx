@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import ThemeToggleButton from "../Buttons/ThemeToggleButton";
 
@@ -8,11 +9,14 @@ const Header = () => {
       aria-label="app-header">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <Link href={"/"}>
-          <h1
-            className="text-2xl font-semibold"
-            aria-label="App Name">
-            PixSlash
-          </h1>
+          <Image
+            src="/logo.png"
+            height={100}
+            width={100}
+            alt="App-Logo"
+            priority
+            className="h-8 w-full"
+          />
         </Link>
 
         <nav className="flex items-center gap-4">

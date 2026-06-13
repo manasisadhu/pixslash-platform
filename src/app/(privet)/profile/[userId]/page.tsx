@@ -1,7 +1,44 @@
-const page = () => {
+import prisma from "@/lib/database/dbClient";
+import authenticUser from "@/server/authenticUser";
+import { notFound } from "next/navigation";
+
+type PageProps = {
+  params: Promise<{
+    userId: string;
+  }>;
+};
+
+const Page = async ({ params }: PageProps) => {
+  const { userId } = await params;
+  const { data } = await authenticUser();
+
+  if (!data || data.user.id !== userId) {
+    notFound();
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: data.user.id,
+    },
+    select: {
+      name: true,
+      email: true,
+      image: true,
+    },
+  });
+
+  if (!user) {
+    notFound();
+  }
+
   return (
-    <section className="grid h-dvh place-items-center">User Profile </section>
+    <section className="grid h-dvh place-items-center">
+      <div>
+        <h1 className="text-3xl font-bold">{user.name}</h1>
+        <p>{user.email}</p>
+      </div>
+    </section>
   );
 };
 
-export default page;
+export default Page;
