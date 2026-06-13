@@ -23,6 +23,8 @@ import { Skeleton } from "../shadcnui/skeleton";
 const PrivateHeader = () => {
   const { push } = useRouter();
   const { data, isPending } = authClient.useSession();
+  const user = data?.user;
+
   return (
     <header
       className="sticky top-0 z-50 border-b"
@@ -44,14 +46,14 @@ const PrivateHeader = () => {
         </nav>
 
         <nav className="flex items-center gap-4">
-          {isPending ?
+          {isPending || !user ?
             <Skeleton className="h-8 w-8 rounded-full" />
           : <>
               <DropdownMenu>
                 <DropdownMenuTrigger className="ring-border hover:ring-foreground/30 flex cursor-pointer items-center gap-1 rounded-full p-0.5 pr-2 ring-1 transition-all">
                   <UserAvatar
-                    name={data?.user.name}
-                    image={data?.user.image}
+                    name={user.name}
+                    image={user.image}
                   />
                   <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
                 </DropdownMenuTrigger>
@@ -62,12 +64,10 @@ const PrivateHeader = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium">
-                          {data?.user.name}
-                        </span>
+                        <span className="text-sm font-medium">{user.name}</span>
 
                         <span className="text-muted-foreground text-xs">
-                          {data?.user.email}
+                          {user.email}
                         </span>
                       </div>
                     </DropdownMenuLabel>
@@ -77,7 +77,7 @@ const PrivateHeader = () => {
 
                   <DropdownMenuGroup>
                     <DropdownMenuItem
-                      onClick={() => push(`/profile/${data?.user.id}`)}>
+                      onClick={() => push(`/profile/${user.id}`)}>
                       <UserIcon /> Profile
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
