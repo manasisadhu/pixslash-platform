@@ -103,7 +103,7 @@ const AppSidebar = ({ userId }: AppSidebarProps) => {
                 <SidebarMenuButton
                   render={<Link href={`/profile/${userId}` as Route} />}
                   tooltip={"Profile"}
-                  isActive={path === `/profile/${userId}`}>
+                  isActive={path === (`/profile/${userId}` as Route)}>
                   <UserIcon />
                   Profile
                 </SidebarMenuButton>
