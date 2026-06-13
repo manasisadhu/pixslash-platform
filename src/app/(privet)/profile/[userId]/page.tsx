@@ -1,4 +1,5 @@
 import prisma from "@/lib/database/dbClient";
+import authenticUser from "@/server/authenticUser";
 import { notFound } from "next/navigation";
 
 type PageProps = {
@@ -9,10 +10,20 @@ type PageProps = {
 
 const Page = async ({ params }: PageProps) => {
   const { userId } = await params;
+  const { data } = await authenticUser();
+
+  if (!data || data.user.id !== userId) {
+    notFound();
+  }
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: data.user.id,
+    },
+    select: {
+      name: true,
+      email: true,
+      image: true,
     },
   });
 
