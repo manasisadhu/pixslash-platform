@@ -85,6 +85,7 @@ model Verification {
 
 model Wallpaper {
   id           String   @id @default(uuid())
+  slug         String?  @unique
   title        String
   description  String
   thumbnailUrl String?
@@ -104,21 +105,25 @@ model Wallpaper {
   likes         Like[]
   comments      Comment[]
   wallpaperTags WallpaperTag[]
-  catagory      Catagory?      @relation(fields: [catagoryId], references: [id])
-  catagoryId    String?
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  categoryId    String?
 
-  @@index([catagoryId])
+  @@index([categoryId])
   @@index([userId])
   @@index([isPublic])
   @@index([isFeatured])
   @@map("wallpaper")
 }
 
-model Catagory {
-  id           String  @id @default(uuid())
-  catagoryName String  @unique
+model Category {
+  id           String   @id @default(uuid())
+  categoryName String   @unique
+  slug         String   @unique
   image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
+  // Relations 
   wallpapers Wallpaper[]
 
   @@map("catagory")
@@ -126,8 +131,8 @@ model Catagory {
 
 model Tag {
   id    String @id @default(uuid())
-  title String
-  slug  String
+  title String @unique
+  slug  String @unique
 
   // Relations 
   wallpaper WallpaperTag[]

@@ -53,6 +53,7 @@ CREATE TABLE "verification" (
 -- CreateTable
 CREATE TABLE "wallpaper" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "slug" TEXT,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "thumbnailUrl" TEXT,
@@ -66,15 +67,19 @@ CREATE TABLE "wallpaper" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "userId" TEXT,
-    "catagoryId" TEXT,
+    "categoryId" TEXT,
     CONSTRAINT "wallpaper_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "wallpaper_catagoryId_fkey" FOREIGN KEY ("catagoryId") REFERENCES "catagory" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "wallpaper_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "catagory" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "catagory" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "catagoryName" TEXT NOT NULL
+    "categoryName" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "image" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateTable
@@ -129,7 +134,10 @@ CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
 
 -- CreateIndex
-CREATE INDEX "wallpaper_catagoryId_idx" ON "wallpaper"("catagoryId");
+CREATE UNIQUE INDEX "wallpaper_slug_key" ON "wallpaper"("slug");
+
+-- CreateIndex
+CREATE INDEX "wallpaper_categoryId_idx" ON "wallpaper"("categoryId");
 
 -- CreateIndex
 CREATE INDEX "wallpaper_userId_idx" ON "wallpaper"("userId");
@@ -141,7 +149,19 @@ CREATE INDEX "wallpaper_isPublic_idx" ON "wallpaper"("isPublic");
 CREATE INDEX "wallpaper_isFeatured_idx" ON "wallpaper"("isFeatured");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "catagory_catagoryName_key" ON "catagory"("catagoryName");
+CREATE UNIQUE INDEX "catagory_categoryName_key" ON "catagory"("categoryName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "catagory_slug_key" ON "catagory"("slug");
+
+-- CreateIndex
+CREATE INDEX "catagory_categoryName_idx" ON "catagory"("categoryName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tag_title_key" ON "tag"("title");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tag_slug_key" ON "tag"("slug");
 
 -- CreateIndex
 CREATE INDEX "wallpapertag_wallpaperId_idx" ON "wallpapertag"("wallpaperId");
