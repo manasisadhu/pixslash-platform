@@ -126,7 +126,6 @@ model Category {
   // Relations 
   wallpapers Wallpaper[]
 
-  @@index([categoryName])
   @@map("catagory")
 }
 

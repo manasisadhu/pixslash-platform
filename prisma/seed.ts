@@ -1,18 +1,12 @@
+import { hashPassword } from "@/lib/argon2";
 import { serverEnv } from "@/lib/env/serverEnv";
 import { PrismaClient } from "@generated/prisma/client";
-import { hash as argon2Hash } from "@node-rs/argon2";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 const adapter = new PrismaLibSql({
   url: serverEnv.DATABASE_URL,
 });
 
 const prisma = new PrismaClient({ adapter });
-
-const hashPassword = async (password: string) => {
-  return await argon2Hash(password, {
-    secret: Buffer.from(serverEnv.BETTER_AUTH_SECRET),
-  });
-};
 
 const main = async () => {
   console.log("Starting database seeding...");
