@@ -68,8 +68,7 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
               {/* User */}
               <div className="flex items-center gap-2 py-2">
                 <Avatar>
-                  <AvatarImage src={`${info.user?.image}`} />
-
+                  <AvatarImage src={info.user?.image ?? undefined} />
                   <AvatarFallback>
                     {info.user?.name.trim() ?
                       info.user.name
