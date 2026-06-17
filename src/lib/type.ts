@@ -1,3 +1,4 @@
+import { Prisma } from "@generated/prisma/client";
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 import z from "zod";
@@ -29,3 +30,16 @@ export type UserAvatarProps = {
   name: string | undefined;
   image: string | null | undefined;
 };
+
+export type WallpaperCardUserProps = Prisma.WallpaperGetPayload<{
+  include: {
+    user: {
+      select: {
+        id: true;
+        name: true;
+        image: true;
+      };
+    };
+    likes: true;
+  };
+}>;

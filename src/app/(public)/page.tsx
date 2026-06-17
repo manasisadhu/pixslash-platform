@@ -1,4 +1,5 @@
-import ToastButton from "@/components/Buttons/ToastButton";
+import WallpaperPageContent from "@/components/Wallpaper/WallpaperPageContent";
+import prisma from "@/lib/database/dbClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,19 +8,32 @@ export const metadata: Metadata = {
     "The best free stock photos, royalty free images & Wallpapers shared by creators. Discover, collect stunning wallpapers. Pixslash is your destination for high-quality wallpapers.",
 };
 
-const page = () => {
+const page = async () => {
+  const getImages = await prisma.wallpaper.findMany({
+    where: {
+      isPublic: true,
+    },
+
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+      likes: true,
+    },
+  });
+
+  if (!getImages) {
+    return <div>No wallpapers found</div>;
+  }
+
   return (
-    <section className="grid h-[90dvh] place-items-center">
-      <div className="space-y-4 text-center">
-        <h1 className="text-5xl font-semibold">
-          Pixslash Wallpaper Application
-        </h1>
-
-        <h2 className="text-3xl">All Wallpapers Show In this Page</h2>
-
-        <ToastButton />
-      </div>
-    </section>
+    <>
+      <WallpaperPageContent info={getImages} />
+    </>
   );
 };
 

@@ -1,12 +1,18 @@
-import { hashPassword } from "@/lib/argon2";
 import { serverEnv } from "@/lib/env/serverEnv";
 import { PrismaClient } from "@generated/prisma/client";
+import { hash as argon2Hash } from "@node-rs/argon2";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 const adapter = new PrismaLibSql({
   url: serverEnv.DATABASE_URL,
 });
 
 const prisma = new PrismaClient({ adapter });
+
+const hashPassword = async (password: string) => {
+  return await argon2Hash(password, {
+    secret: Buffer.from(serverEnv.BETTER_AUTH_SECRET),
+  });
+};
 
 const main = async () => {
   console.log("Starting database seeding...");
@@ -176,26 +182,38 @@ const main = async () => {
       {
         name: "Lionel Messi",
         email: "messi@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43b?w=400",
       },
       {
         name: "Cristiano Ronaldo",
         email: "ronaldo@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
       },
       {
         name: "Neymar Jr",
         email: "neymar@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=400",
       },
       {
         name: "Kylian Mbappe",
         email: "mbappe@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
       },
       {
         name: "Kevin De Bruyne",
         email: "debruyne@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=400",
       },
       {
         name: "Erling Haaland",
         email: "haaland@gmail.com",
+        image:
+          "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400",
       },
     ];
 
@@ -211,10 +229,11 @@ const main = async () => {
           create: {
             name: user.name,
             email: user.email,
+            image: user.image,
             emailVerified: false,
             accounts: {
               create: {
-                providerId: "credentials",
+                providerId: "credential",
                 accountId: user.email,
                 password: userPassword,
               },
@@ -233,161 +252,147 @@ const main = async () => {
     // create sample wallpaper data
     const demoWallpapers = [
       {
-        title: "Snowy Mountain Peak",
-        slug: "snowy-mountain-peak",
+        title: "Desert Dunes",
+        slug: "desert-dunes",
         category: "nature",
-        description: "Snow-covered mountain under a clear blue sky",
+        description: "Golden sand dunes under the afternoon sun",
         imageUrl:
-          "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920",
+          "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&h=1080&q=80",
         width: 3840,
         height: 2160,
         format: "jpg",
         owner: "messi@gmail.com",
-        tags: ["mountain", "nature", "4k"],
+        tags: ["desert", "nature", "4k"],
       },
       {
-        title: "Forest Waterfall",
-        slug: "forest-waterfall",
-        category: "nature",
-        description: "Hidden waterfall deep inside a lush forest",
-        imageUrl:
-          "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1920",
-        width: 3840,
-        height: 2160,
-        format: "jpg",
-        owner: "messi@gmail.com",
-        tags: ["forest", "nature", "hd"],
-      },
-      {
-        title: "Purple Sunset Beach",
-        slug: "purple-sunset-beach",
-        category: "nature",
-        description: "Colorful sunset reflecting across the ocean",
-        imageUrl:
-          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920",
-        width: 3840,
-        height: 2160,
-        format: "jpg",
-        owner: "ronaldo@gmail.com",
-        tags: ["sunset", "ocean", "4k"],
-      },
-      {
-        title: "Retro Gaming Room",
-        slug: "retro-gaming-room",
+        title: "Cyberpunk Street",
+        slug: "cyberpunk-street",
         category: "gaming",
-        description: "Classic gaming setup with neon lighting",
+        description: "Neon-lit futuristic city street",
         imageUrl:
-          "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=1920",
-        width: 2560,
-        height: 1440,
+          "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1920&h=1080&q=80",
+        width: 3840,
+        height: 2160,
         format: "jpg",
         owner: "ronaldo@gmail.com",
-        tags: ["gaming", "technology", "hd"],
+        tags: ["cyberpunk", "gaming", "neon"],
       },
       {
-        title: "Anime Night City",
-        slug: "anime-night-city",
-        category: "anime",
-        description: "Anime-inspired city street glowing at night",
+        title: "Galaxy Horizon",
+        slug: "galaxy-horizon",
+        category: "space",
+        description: "Milky Way stretching over the horizon",
         imageUrl:
-          "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1920",
+          "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1920&h=1080&q=80",
+        width: 3840,
+        height: 2160,
+        format: "jpg",
+        owner: "neymar@gmail.com",
+        tags: ["space", "galaxy", "4k"],
+      },
+      {
+        title: "Tokyo Rain",
+        slug: "tokyo-rain",
+        category: "anime",
+        description: "Rainy city street inspired by anime aesthetics",
+        imageUrl:
+          "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1920&h=1080&q=80",
         width: 1920,
         height: 1080,
         format: "jpg",
-        owner: "neymar@gmail.com",
-
-        tags: ["anime", "city", "dark"],
-      },
-      {
-        title: "Red Sports Car",
-        slug: "red-sports-car",
-        category: "cars",
-        description: "Modern sports car parked under city lights",
-        imageUrl:
-          "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920",
-        width: 3840,
-        height: 2160,
-        format: "jpg",
-        owner: "neymar@gmail.com",
-        tags: ["car", "city", "4k"],
-      },
-      {
-        title: "Nebula Dreams",
-        slug: "nebula-dreams",
-        category: "space",
-        description: "Colorful nebula stretching across deep space",
-        imageUrl:
-          "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920",
-        width: 3840,
-        height: 2160,
-        format: "jpg",
         owner: "mbappe@gmail.com",
-        tags: ["space", "4k", "future"],
+        tags: ["anime", "rain", "city"],
       },
       {
-        title: "Minimal Black Shapes",
-        slug: "minimal-black-shapes",
-        category: "minimal",
-        description: "Elegant geometric design on a dark background",
+        title: "Luxury Supercar",
+        slug: "luxury-supercar",
+        category: "cars",
+        description: "Exotic supercar parked near skyscrapers",
         imageUrl:
-          "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1920",
+          "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920&h=1080&q=80",
+        width: 3840,
+        height: 2160,
+        format: "jpg",
+        owner: "haaland@gmail.com",
+        tags: ["car", "sports", "4k"],
+      },
+      {
+        title: "Dark AMOLED Mountain",
+        slug: "dark-amoled-mountain",
+        category: "minimal",
+        description: "Minimal mountain silhouette on black background",
+        imageUrl:
+          "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1440&h=3200&q=80",
         width: 1440,
         height: 3200,
         format: "jpg",
-        owner: "mbappe@gmail.com",
-        tags: ["minimal", "dark", "amoled"],
+        owner: "debruyne@gmail.com",
+        tags: ["amoled", "minimal", "dark"],
       },
       {
-        title: "Abstract Waves",
-        slug: "abstract-waves",
+        title: "Blue Abstract Flow",
+        slug: "blue-abstract-flow",
         category: "abstract",
-        description: "Flowing abstract patterns with smooth curves",
+        description: "Smooth blue flowing abstract shapes",
         imageUrl:
-          "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920",
+          "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1920&h=1080&q=80",
         width: 2560,
         height: 1440,
         format: "jpg",
-        owner: "debruyne@gmail.com",
-        tags: ["abstract", "hd", "minimal"],
+        owner: "messi@gmail.com",
+        tags: ["abstract", "blue", "hd"],
       },
       {
-        title: "Cherry Blossom Garden",
-        slug: "cherry-blossom-garden",
-        category: "nature",
-        description: "Beautiful flowers blooming in spring",
-        imageUrl:
-          "https://images.unsplash.com/photo-1520637836862-4d197d17c55a?w=1920",
-        width: 3840,
-        height: 2160,
-        format: "jpg",
-        owner: "debruyne@gmail.com",
-        tags: ["flowers", "nature", "4k"],
-      },
-      {
-        title: "Majestic Eagle",
-        slug: "majestic-eagle",
+        title: "Snow Wolf",
+        slug: "snow-wolf",
         category: "animals",
-        description: "Eagle soaring through the sky",
+        description: "White wolf standing in the snow",
         imageUrl:
-          "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=1920",
+          "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1920&h=1080&q=80",
         width: 3840,
         height: 2160,
         format: "jpg",
-        owner: "haaland@gmail.com",
-        tags: ["wildlife", "nature", "4k"],
+        owner: "ronaldo@gmail.com",
+        tags: ["wolf", "animal", "4k"],
       },
       {
-        title: "Future Tech Circuit",
-        slug: "future-tech-circuit",
+        title: "Green Matrix Code",
+        slug: "green-matrix-code",
         category: "technology",
-        description: "Futuristic digital circuit design",
+        description: "Digital code streaming in green",
         imageUrl:
-          "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920",
+          "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&h=1080&q=80",
         width: 3840,
         height: 2160,
         format: "jpg",
-        owner: "haaland@gmail.com",
-        tags: ["technology", "future", "amoled"],
+        owner: "neymar@gmail.com",
+        tags: ["technology", "code", "dark"],
+      },
+      {
+        title: "Northern Lights",
+        slug: "northern-lights",
+        category: "nature",
+        description: "Aurora borealis over snowy landscape",
+        imageUrl:
+          "https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1920&h=1080&q=80",
+        width: 3840,
+        height: 2160,
+        format: "jpg",
+        owner: "mbappe@gmail.com",
+        tags: ["aurora", "nature", "4k"],
+      },
+      {
+        title: "Space Station View",
+        slug: "space-station-view",
+        category: "space",
+        description: "Earth viewed from a futuristic space station",
+        imageUrl:
+          "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&h=1080&q=80",
+        width: 3840,
+        height: 2160,
+        format: "jpg",
+        owner: "debruyne@gmail.com",
+        tags: ["space", "earth", "future"],
       },
     ];
 
