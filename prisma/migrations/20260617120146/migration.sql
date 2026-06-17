@@ -155,9 +155,6 @@ CREATE UNIQUE INDEX "catagory_categoryName_key" ON "catagory"("categoryName");
 CREATE UNIQUE INDEX "catagory_slug_key" ON "catagory"("slug");
 
 -- CreateIndex
-CREATE INDEX "catagory_categoryName_idx" ON "catagory"("categoryName");
-
--- CreateIndex
 CREATE UNIQUE INDEX "tag_title_key" ON "tag"("title");
 
 -- CreateIndex

@@ -1,5 +1,6 @@
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
-import authenticUser from "@/server/authenticUser";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 type PageProps = {
@@ -10,7 +11,9 @@ type PageProps = {
 
 const Page = async ({ params }: PageProps) => {
   const { userId } = await params;
-  const { data } = await authenticUser();
+  const data = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!data || data.user.id !== userId) {
     notFound();
