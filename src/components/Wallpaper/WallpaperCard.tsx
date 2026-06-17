@@ -41,12 +41,14 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
             <Button
               size="icon"
               variant="secondary"
+              aria-label="Save wallpaper"
               className="bg-background/90 h-9 w-9 rounded-full backdrop-blur-md">
               <Bookmark className="h-4 w-4" />
             </Button>
 
             <Button
               variant="secondary"
+              aria-label="Like Wallpaper"
               className="flex h-10 items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 text-white backdrop-blur-xl hover:bg-black/70">
               <HeartIcon className="h-4 w-4 fill-current" />
               <span className="text-sm font-semibold">
@@ -57,6 +59,7 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
             <Button
               size="icon"
               variant="secondary"
+              aria-label="Download wallpaper"
               className="bg-background/90 h-9 w-9 rounded-full backdrop-blur-md">
               <Download className="h-4 w-4" />
             </Button>
