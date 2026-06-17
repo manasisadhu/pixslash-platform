@@ -40,6 +40,10 @@ export type WallpaperCardUserProps = Prisma.WallpaperGetPayload<{
         image: true;
       };
     };
-    likes: true;
+    _count: {
+      select: {
+        likes: true;
+      };
+    };
   };
 }>;

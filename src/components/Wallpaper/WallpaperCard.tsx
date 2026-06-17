@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Bookmark, Download } from "lucide-react";
+import { Award, Bookmark, Download, HeartIcon } from "lucide-react";
 import Image from "next/image";
 
 import { WallpaperCardUserProps } from "@/lib/type";
@@ -14,7 +14,7 @@ type WallpaperCardProps = {
 
 const WallpaperCard = ({ info }: WallpaperCardProps) => {
   return (
-    <Card className="group overflow-hidden rounded-xl border-0 p-0 shadow-sm transition-all duration-300 hover:shadow-xl">
+    <Card className="group overflow-hidden rounded-xl border-0 p-0 shadow-sm transition-all duration-300 hover:cursor-pointer hover:shadow-xl">
       <CardContent className="relative p-0">
         {/* Wallpaper Image */}
         <Image
@@ -43,6 +43,15 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
               variant="secondary"
               className="bg-background/90 h-9 w-9 rounded-full backdrop-blur-md">
               <Bookmark className="h-4 w-4" />
+            </Button>
+
+            <Button
+              variant="secondary"
+              className="flex h-10 items-center gap-2 rounded-full border border-white/10 bg-black/50 px-3 text-white backdrop-blur-xl hover:bg-black/70">
+              <HeartIcon className="h-4 w-4 fill-current" />
+              <span className="text-sm font-semibold">
+                {info._count.likes.toLocaleString()}
+              </span>
             </Button>
 
             <Button

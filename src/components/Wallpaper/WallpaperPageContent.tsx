@@ -4,8 +4,8 @@ import { WallpaperCardUserProps } from "@/lib/type";
 import Masonry from "react-masonry-css";
 import WallpaperCard from "./WallpaperCard";
 const breakpointCols = {
-  default: 4,
-  1024: 4,
+  default: 3,
+  1024: 3,
   768: 2,
   640: 1,
 };

@@ -22,7 +22,11 @@ const page = async () => {
           image: true,
         },
       },
-      likes: true,
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
     },
   });
 
@@ -30,11 +34,7 @@ const page = async () => {
     return <div>No wallpapers found</div>;
   }
 
-  return (
-    <>
-      <WallpaperPageContent info={getImages} />
-    </>
-  );
+  return <WallpaperPageContent info={getImages} />;
 };
 
 export default page;
