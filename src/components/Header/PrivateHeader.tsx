@@ -1,4 +1,5 @@
 "use client";
+
 import { authClient } from "@/lib/auth-client";
 import { ChevronDownIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -27,7 +28,7 @@ const PrivateHeader = () => {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b"
+      className="sticky top-0 z-50 border-b backdrop-blur-lg"
       aria-label="app-header">
       <div className="flex items-center justify-between px-6 py-3">
         <nav className="flex items-center gap-2">
@@ -54,6 +55,7 @@ const PrivateHeader = () => {
                   <UserAvatar
                     name={user.name}
                     image={user.image}
+                    size="sm"
                   />
                   <ChevronDownIcon className="text-muted-foreground h-4 w-4" />
                 </DropdownMenuTrigger>

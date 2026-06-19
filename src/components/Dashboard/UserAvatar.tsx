@@ -1,7 +1,7 @@
 import { UserAvatarProps } from "@/lib/type";
 import { Avatar, AvatarFallback, AvatarImage } from "../shadcnui/avatar";
 
-const UserAvatar = ({ name, image }: UserAvatarProps) => {
+const UserAvatar = ({ name, image, size }: UserAvatarProps) => {
   const initials =
     name?.trim() ?
       name
@@ -14,7 +14,7 @@ const UserAvatar = ({ name, image }: UserAvatarProps) => {
     : "CN";
 
   return (
-    <Avatar size="sm">
+    <Avatar size={size}>
       <AvatarImage
         src={image ?? undefined}
         height={24}

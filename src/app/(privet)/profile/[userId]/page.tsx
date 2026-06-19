@@ -11,17 +11,17 @@ type PageProps = {
 
 const Page = async ({ params }: PageProps) => {
   const { userId } = await params;
-  const data = await auth.api.getSession({
+  const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (!data || data.user.id !== userId) {
+  if (!session || session.user.id !== userId) {
     notFound();
   }
 
   const user = await prisma.user.findUnique({
     where: {
-      id: data.user.id,
+      id: session.user.id,
     },
     select: {
       name: true,

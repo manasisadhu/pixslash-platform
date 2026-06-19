@@ -29,6 +29,7 @@ export type AppSidebarProps = {
 export type UserAvatarProps = {
   name: string | undefined;
   image: string | null | undefined;
+  size?: "lg" | "sm" | "default";
 };
 
 export type WallpaperCardUserProps = Prisma.WallpaperGetPayload<{
@@ -43,6 +44,68 @@ export type WallpaperCardUserProps = Prisma.WallpaperGetPayload<{
     _count: {
       select: {
         likes: true;
+      };
+    };
+  };
+}>;
+
+export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
+  omit: {
+    thumbnailUrl: true;
+    updatedAt: true;
+    categoryId: true;
+    id: true;
+  };
+
+  include: {
+    category: {
+      select: {
+        categoryName: true;
+      };
+    };
+
+    user: {
+      select: {
+        name: true;
+        image: true;
+      };
+    };
+
+    wallpaperTags: {
+      select: {
+        tag: {
+          select: {
+            title: true;
+            slug: true;
+            id: true;
+          };
+        };
+      };
+    };
+
+    comments: {
+      orderBy: {
+        createdAt: "desc";
+      };
+
+      select: {
+        id: true;
+        opinion: true;
+        createdAt: true;
+
+        user: {
+          select: {
+            name: true;
+            image: true;
+          };
+        };
+      };
+    };
+
+    _count: {
+      select: {
+        likes: true;
+        comments: true;
       };
     };
   };
