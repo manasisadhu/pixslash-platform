@@ -68,7 +68,7 @@ const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
           aria-label="Download wallpaper"
           className="rounded-lg bg-green-500 text-white backdrop-blur-md hover:bg-green-600">
           <DownloadIcon className="h-4 w-4" />
-          <span className="hidden md:block">Dwonload</span>
+          <span className="hidden md:block">Download</span>
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
