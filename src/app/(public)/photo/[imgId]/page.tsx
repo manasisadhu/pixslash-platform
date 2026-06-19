@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 const getWallPaper = async (imgId: string) => {
-  return await prisma.wallpaper.findUniqueOrThrow({
+  return await prisma.wallpaper.findUnique({
     where: {
       slug: imgId,
       isPublic: true,
