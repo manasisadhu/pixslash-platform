@@ -54,7 +54,6 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
     thumbnailUrl: true;
     updatedAt: true;
     categoryId: true;
-    id: true;
   };
 
   include: {
@@ -80,6 +79,13 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
             id: true;
           };
         };
+      };
+    };
+
+    likes: {
+      select: {
+        userId: true;
+        wallpaperId: true;
       };
     };
 

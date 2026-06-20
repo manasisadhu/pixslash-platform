@@ -1,7 +1,9 @@
 import { buttonVariants } from "@/components/shadcnui/button";
 import WallpaperDetailsCard from "@/components/Wallpaper/WallpaperDetailsCard";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
 import { XIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,7 +24,6 @@ const getWallPaper = async (imgId: string) => {
       thumbnailUrl: true,
       updatedAt: true,
       categoryId: true,
-      id: true,
     },
 
     include: {
@@ -48,6 +49,13 @@ const getWallPaper = async (imgId: string) => {
         select: {
           name: true,
           image: true,
+        },
+      },
+
+      likes: {
+        select: {
+          userId: true,
+          wallpaperId: true,
         },
       },
 
@@ -138,8 +146,26 @@ const page = async ({ params }: PageProps) => {
   const { imgId } = await params;
   const wallpaper = await getWallPaper(imgId);
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   if (!wallpaper) {
     notFound();
+  }
+
+  let isLiked = false;
+
+  if (session?.user?.id) {
+    const like = await prisma.like.findUnique({
+      where: {
+        userId_wallpaperId: {
+          userId: session.user.id,
+          wallpaperId: wallpaper.id,
+        },
+      },
+    });
+    isLiked = !!like;
   }
 
   return (
@@ -150,7 +176,11 @@ const page = async ({ params }: PageProps) => {
         <XIcon />
       </Link>
       <div className="w-full">
-        <WallpaperDetailsCard getDetails={wallpaper} />
+        <WallpaperDetailsCard
+          getDetails={wallpaper}
+          isLiked={isLiked}
+          isAuthenticated={!!session?.user}
+        />
       </div>
     </section>
   );

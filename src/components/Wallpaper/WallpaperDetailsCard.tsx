@@ -8,13 +8,13 @@ import {
   BookmarkIcon,
   ChevronsUpDownIcon,
   DownloadIcon,
-  HeartIcon,
   InfoIcon,
   User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import LikeButton from "../Buttons/LikeButton";
 import CommentBox from "../Dashboard/CommentBox";
 import UserAvatar from "../Dashboard/UserAvatar";
 import { Button, buttonVariants } from "../shadcnui/button";
@@ -43,13 +43,20 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../shadcnui/tooltip";
 
 type WallpaperDetailsCardProps = {
   getDetails: WallpaperDetailsCardType;
+  isAuthenticated: boolean;
+  isLiked: boolean;
 };
 
-const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
+const WallpaperDetailsCard = ({
+  getDetails,
+  isAuthenticated,
+  isLiked,
+}: WallpaperDetailsCardProps) => {
   const formattedFileSize = formatFileSize(getDetails.fileSize ?? 1024);
   const { data, isPending } = authClient.useSession();
   const user = data?.user;
   const [open, setOpen] = useState(false);
+
   return (
     <Card className="py-0">
       <CardHeader className="flex items-center justify-between pt-4">
@@ -110,23 +117,12 @@ const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
           {/* wallpaper card features  */}
           <div className="flex items-center gap-2 md:ml-auto">
             {/* like system  */}
-            <Tooltip>
-              <Button
-                variant="outline"
-                aria-label="Like Wallpaper"
-                className="flex items-center gap-2 rounded-full px-3 backdrop-blur-xl"
-                render={
-                  <TooltipTrigger>
-                    <HeartIcon className="h-4 w-4" />
-                    <span className="text-sm font-semibold">
-                      {getDetails._count.likes.toLocaleString()}
-                    </span>
-                  </TooltipTrigger>
-                }></Button>
-              <TooltipContent>
-                <p>I love this</p>
-              </TooltipContent>
-            </Tooltip>
+            <LikeButton
+              wallpaperId={getDetails.id}
+              initialCount={getDetails._count.likes}
+              initialLiked={isLiked}
+              tooltipContent={<p>I love This</p>}
+            />
 
             {/* save system  */}
             <Button
