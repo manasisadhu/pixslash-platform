@@ -26,6 +26,7 @@ model User {
   wallpapers Wallpaper[]
   likes      Like[]
   comments   Comment[]
+  saved      SavedPost[]
 
   @@unique([email])
   @@map("user")
@@ -107,6 +108,7 @@ model Wallpaper {
   wallpaperTags WallpaperTag[]
   category      Category?      @relation(fields: [categoryId], references: [id])
   categoryId    String?
+  saved         SavedPost[]
 
   @@index([categoryId])
   @@index([userId])
@@ -182,4 +184,22 @@ model Comment {
   @@index([wallpaperId])
   @@index([userId])
   @@map("comment")
+}
+
+model SavedPost {
+  id String @id @default(uuid())
+
+  wallpaperId String
+  userId      String
+
+  createdAt DateTime @default(now())
+
+  // Relations 
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallpaper Wallpaper @relation(fields: [wallpaperId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wallpaperId])
+  @@index([wallpaperId])
+  @@index([userId])
+  @@map("savedpost")
 }

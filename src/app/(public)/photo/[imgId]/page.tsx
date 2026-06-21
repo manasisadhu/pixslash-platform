@@ -59,6 +59,13 @@ const getWallPaper = async (imgId: string) => {
         },
       },
 
+      saved: {
+        select: {
+          userId: true,
+          wallpaperId: true,
+        },
+      },
+
       comments: {
         orderBy: {
           createdAt: "desc",
@@ -168,6 +175,21 @@ const page = async ({ params }: PageProps) => {
     isLiked = !!like;
   }
 
+  let isSaved = false;
+
+  if (session?.user.id) {
+    const save = await prisma.savedPost.findUnique({
+      where: {
+        userId_wallpaperId: {
+          userId: session.user.id,
+          wallpaperId: wallpaper.id,
+        },
+      },
+    });
+
+    isSaved = !!save;
+  }
+
   return (
     <section className="gap-2 md:flex">
       <Link
@@ -179,7 +201,7 @@ const page = async ({ params }: PageProps) => {
         <WallpaperDetailsCard
           getDetails={wallpaper}
           isLiked={isLiked}
-          isAuthenticated={!!session?.user}
+          isSaved={isSaved}
         />
       </div>
     </section>

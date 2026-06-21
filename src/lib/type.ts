@@ -89,6 +89,13 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
       };
     };
 
+    saved: {
+      select: {
+        userId: true;
+        wallpaperId: true;
+      };
+    };
+
     comments: {
       orderBy: {
         createdAt: "desc";
@@ -112,6 +119,40 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
       select: {
         likes: true;
         comments: true;
+      };
+    };
+  };
+}>;
+
+export type SavedWallpaperCardType = Prisma.SavedPostGetPayload<{
+  orderBy: [
+    {
+      createdAt: "desc";
+    },
+    {
+      id: "desc";
+    },
+  ];
+  select: {
+    createdAt: true;
+
+    wallpaper: {
+      select: {
+        id: true;
+        imageUrl: true;
+        height: true;
+        width: true;
+        title: true;
+        description: true;
+        slug: true;
+
+        user: {
+          select: {
+            id: true;
+            image: true;
+            name: true;
+          };
+        };
       };
     };
   };

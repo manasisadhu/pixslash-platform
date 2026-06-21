@@ -4,17 +4,12 @@ import { authClient } from "@/lib/auth-client";
 import formatFileSize from "@/lib/formatFileSize";
 import { WallpaperDetailsCardType } from "@/lib/type";
 import { formatDistanceToNow } from "date-fns";
-import {
-  BookmarkIcon,
-  ChevronsUpDownIcon,
-  DownloadIcon,
-  InfoIcon,
-  User,
-} from "lucide-react";
+import { ChevronsUpDownIcon, DownloadIcon, InfoIcon, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import LikeButton from "../Buttons/LikeButton";
+import SaveButton from "../Buttons/SaveButton";
 import CommentBox from "../Dashboard/CommentBox";
 import UserAvatar from "../Dashboard/UserAvatar";
 import { Button, buttonVariants } from "../shadcnui/button";
@@ -43,13 +38,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../shadcnui/tooltip";
 
 type WallpaperDetailsCardProps = {
   getDetails: WallpaperDetailsCardType;
-  isAuthenticated: boolean;
   isLiked: boolean;
+  isSaved: boolean;
 };
 
 const WallpaperDetailsCard = ({
   getDetails,
-  isAuthenticated,
+  isSaved,
   isLiked,
 }: WallpaperDetailsCardProps) => {
   const formattedFileSize = formatFileSize(getDetails.fileSize ?? 1024);
@@ -125,14 +120,11 @@ const WallpaperDetailsCard = ({
             />
 
             {/* save system  */}
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Save wallpaper"
-              className="bg-background/90 flex w-auto gap-1 rounded-full px-4 backdrop-blur-md">
-              <BookmarkIcon className="h-4 w-4" />
-              <span className="text-sm font-semibold">Save</span>
-            </Button>
+            <SaveButton
+              buttonContent="Save"
+              buttonVariant="outline"
+              wallpaperId={getDetails.id}
+              initialSaved={isSaved}></SaveButton>
 
             {/* information system  */}
             <DropdownMenu>

@@ -3,7 +3,9 @@
 import { authClient } from "@/lib/auth-client";
 import toggleLike from "@/server/toggleLike";
 import { HeartIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
+import { toast } from "react-toastify";
 import { Button } from "../shadcnui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../shadcnui/tooltip";
 
@@ -25,6 +27,8 @@ const LikeButton = ({
   const [loading, setLoading] = useState(false);
   const [showError, setError] = useState<string>();
   const { data } = authClient.useSession();
+  const pathname = usePathname();
+
   const handleLike = async () => {
     if (!data) {
       setError("Please login first");
@@ -49,16 +53,16 @@ const LikeButton = ({
         // Rollback
         setLiked(previousLiked);
         setCount(previousCount);
-        setError(result.message);
+        toast.error(result.message);
       } else {
-        setError(undefined);
+        toast.success(result.message);
         setLiked(result.liked ?? previousLiked);
         setCount(result.likesCount ?? previousCount);
       }
     } catch {
       setLiked(previousLiked);
       setCount(previousCount);
-      setError("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -88,9 +92,11 @@ const LikeButton = ({
         className="flex items-center gap-2 rounded-full px-3 backdrop-blur-xl"
       />
 
-      <TooltipContent>
-        {!data ? (showError ?? "Please login first") : tooltipContent}
-      </TooltipContent>
+      {pathname === "/" ? null : (
+        <TooltipContent>
+          {!data ? (showError ?? "Please login first") : tooltipContent}
+        </TooltipContent>
+      )}
     </Tooltip>
   );
 };

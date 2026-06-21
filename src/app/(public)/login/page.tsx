@@ -8,8 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcnui/card";
+import { auth } from "@/lib/auth";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Login | PixSlash",
@@ -17,7 +20,15 @@ export const metadata: Metadata = {
     "Login in to your PixSlash account to explore, upload, organize, and download high-quality wallpapers for desktop and mobile devices.",
 };
 
-const page = () => {
+const page = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session?.session.userId) {
+    redirect("/");
+  }
+
   return (
     <section className="grid h-[90dvh] place-items-center">
       <Card className="w-auto md:w-100">
