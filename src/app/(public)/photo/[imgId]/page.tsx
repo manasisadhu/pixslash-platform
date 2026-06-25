@@ -78,6 +78,7 @@ const getWallPaper = async (imgId: string) => {
 
           user: {
             select: {
+              id: true,
               name: true,
               image: true,
             },
@@ -197,6 +198,7 @@ const page = async ({ params }: PageProps) => {
         className={buttonVariants({ variant: "ghost" })}>
         <XIcon />
       </Link>
+
       <div className="w-full">
         <WallpaperDetailsCard
           getDetails={wallpaper}

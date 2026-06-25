@@ -36,3 +36,11 @@ export const loginSchema = z.object({
     .max(128, { error: "password must not exceed 128 characters" }),
   rememberMe: z.boolean(),
 });
+
+export const commentSchema = z.object({
+  commentText: z
+    .string()
+    .trim()
+    .min(4, "Comment is too short.")
+    .max(300, "Comment is too long."),
+});

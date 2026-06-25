@@ -3,11 +3,18 @@
 import { authClient } from "@/lib/auth-client";
 import formatFileSize from "@/lib/formatFileSize";
 import { WallpaperDetailsCardType } from "@/lib/type";
-import { formatDistanceToNow } from "date-fns";
-import { ChevronsUpDownIcon, DownloadIcon, InfoIcon, User } from "lucide-react";
+import { formatDistanceToNowStrict } from "date-fns";
+import {
+  ChevronsUpDownIcon,
+  DownloadIcon,
+  EllipsisVerticalIcon,
+  InfoIcon,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import DeleteCommentButton from "../Buttons/DeleteCommentButton";
 import LikeButton from "../Buttons/LikeButton";
 import SaveButton from "../Buttons/SaveButton";
 import CommentBox from "../Dashboard/CommentBox";
@@ -217,22 +224,22 @@ const WallpaperDetailsCard = ({
             {isPending ?
               <Skeleton className="h-8 w-8 rounded-full" />
             : !user ?
-              <div className="flex items-center gap-2">
-                <div className="bg-accent rounded-full px-2 py-2">
+              <div className="flex gap-2">
+                <div className="bg-accent h-10 w-10 rounded-full px-2 py-2">
                   <User />
                 </div>
                 <div className="w-full">
-                  <CommentBox />
+                  <CommentBox wallpaperId={getDetails.id} />
                 </div>
               </div>
-            : <div className="flex items-center gap-2">
+            : <div className="flex gap-2">
                 <UserAvatar
                   name={user.name}
                   image={user.image}
-                  size="sm"
+                  size="default"
                 />
 
-                <CommentBox />
+                <CommentBox wallpaperId={getDetails.id} />
               </div>
             }
           </div>
@@ -242,23 +249,42 @@ const WallpaperDetailsCard = ({
               return (
                 <div
                   key={c.id}
-                  className="flex items-center gap-2 rounded-lg bg-white p-2 shadow-md dark:bg-black/95">
-                  <div className="">
+                  className="flex items-center justify-between gap-2 rounded-lg bg-white p-2 shadow-md dark:bg-black/95">
+                  <div className="flex gap-3">
                     <UserAvatar
                       image={c.user.image}
                       name={c.user.name}
                       size="default"
                     />
+
+                    <div className="">
+                      <CardTitle className="text-sm">
+                        {c.user.name}{" "}
+                        <span className="text-[12px] font-normal text-black/55 dark:text-white/55">
+                          {formatDistanceToNowStrict(c.createdAt, {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </CardTitle>
+
+                      <CardDescription>{c.opinion}</CardDescription>
+                    </div>
                   </div>
-                  <div className="">
-                    <CardTitle className="text-sm">
-                      {c.user.name}{" "}
-                      <span className="text-[12px] font-normal text-black/55 dark:text-white/55">
-                        {formatDistanceToNow(c.createdAt, { addSuffix: true })}
-                      </span>
-                    </CardTitle>
-                    <CardDescription>{c.opinion}</CardDescription>
-                  </div>
+
+                  {data?.session.userId === c.user.id && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <EllipsisVerticalIcon size={16} />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent>
+                        <DeleteCommentButton
+                          commentId={c.id}
+                          wallpaperId={getDetails.id}
+                        />
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               );
             })}

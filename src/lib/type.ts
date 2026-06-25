@@ -2,7 +2,7 @@ import { Prisma } from "@generated/prisma/client";
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 import z from "zod";
-import { loginSchema, registerSchema } from "./zodSchema";
+import { commentSchema, loginSchema, registerSchema } from "./zodSchema";
 
 export type RootLayoutProps = Readonly<{
   children: ReactNode;
@@ -15,6 +15,8 @@ export type LayoutChildrenProps = {
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
+
+export type CommentSchemaType = z.infer<typeof commentSchema>;
 
 export type SideBarNavItemType = {
   label: string;
@@ -108,6 +110,7 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
 
         user: {
           select: {
+            id: true;
             name: true;
             image: true;
           };
