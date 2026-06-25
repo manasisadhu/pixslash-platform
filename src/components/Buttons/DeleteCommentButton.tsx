@@ -22,18 +22,24 @@ const DeleteCommentButton = ({
   const deleteCommentHandler = async () => {
     setLoading(true);
 
-    const { isSuccess, message } = await deleteComment(commentId, wallpaperId);
+    try {
+      const { isSuccess, message } = await deleteComment(
+        commentId,
+        wallpaperId,
+      );
 
-    if (!isSuccess) {
-      toast.error(message);
-    }
+      if (!isSuccess) {
+        toast.error(message);
+        return;
+      }
 
-    if (isSuccess) {
       toast.success(message);
       refresh();
+    } catch {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
