@@ -5,6 +5,7 @@ import { CommentSchemaType } from "@/lib/type";
 import { commentSchema } from "@/lib/zodSchema";
 import comment from "@/server/comment";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Button } from "../shadcnui/button";
@@ -18,6 +19,7 @@ type CommentBoxProps = {
 
 const CommentBox = ({ wallpaperId }: CommentBoxProps) => {
   const { data } = authClient.useSession();
+  const { refresh } = useRouter();
 
   const maxCommentLength = 300;
 
@@ -43,8 +45,6 @@ const CommentBox = ({ wallpaperId }: CommentBoxProps) => {
   const remaining = maxCommentLength - currentLength;
 
   const submitComment = async ({ commentText }: CommentSchemaType) => {
-    await new Promise<void>((r) => setTimeout(r, 1800));
-
     const { isSuccess, message } = await comment({ wallpaperId, commentText });
 
     if (!isSuccess) {
@@ -54,6 +54,7 @@ const CommentBox = ({ wallpaperId }: CommentBoxProps) => {
     if (isSuccess) {
       toast.success(message);
       reset();
+      refresh();
     }
   };
 
