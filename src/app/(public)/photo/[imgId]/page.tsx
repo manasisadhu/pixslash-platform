@@ -52,20 +52,6 @@ const getWallPaper = async (imgId: string) => {
         },
       },
 
-      likes: {
-        select: {
-          userId: true,
-          wallpaperId: true,
-        },
-      },
-
-      saved: {
-        select: {
-          userId: true,
-          wallpaperId: true,
-        },
-      },
-
       comments: {
         orderBy: {
           createdAt: "desc",
