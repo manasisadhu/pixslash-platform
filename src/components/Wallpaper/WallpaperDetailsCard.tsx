@@ -131,7 +131,8 @@ const WallpaperDetailsCard = ({
               buttonContent="Save"
               buttonVariant="outline"
               wallpaperId={getDetails.id}
-              initialSaved={isSaved}></SaveButton>
+              initialSaved={isSaved}
+            />
 
             {/* information system  */}
             <DropdownMenu>

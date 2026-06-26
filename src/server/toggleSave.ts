@@ -17,10 +17,11 @@ const toggleSave = async (wallpaperId: string) => {
       };
     }
 
-    // check own wallpaper
-    const wallpaper = await prisma.wallpaper.findUnique({
+    // Only allow public wallpapers to be saved
+    const wallpaper = await prisma.wallpaper.findFirst({
       where: {
         id: wallpaperId,
+        isPublic: true,
       },
       select: {
         userId: true,

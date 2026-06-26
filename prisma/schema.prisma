@@ -86,7 +86,7 @@ model Verification {
 
 model Wallpaper {
   id           String   @id @default(uuid())
-  slug         String?  @unique
+  slug         String   @unique
   title        String
   description  String
   thumbnailUrl String?

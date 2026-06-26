@@ -1,4 +1,3 @@
-import prisma from "@/lib/database/dbClient";
 import { SavedWallpaperCardType } from "@/lib/type";
 import { formatDistanceToNowStrict } from "date-fns";
 import { DownloadIcon } from "lucide-react";
@@ -18,28 +17,13 @@ import {
 
 type SavedWallpaperCardProps = {
   savePostInfo: SavedWallpaperCardType;
-  isAuthentic: string;
+  initialSaved: boolean;
 };
 
 const SavedWallpaperCard = async ({
   savePostInfo,
-  isAuthentic,
+  initialSaved,
 }: SavedWallpaperCardProps) => {
-  let isSaved = false;
-
-  if (isAuthentic) {
-    const save = await prisma.savedPost.findUnique({
-      where: {
-        userId_wallpaperId: {
-          userId: isAuthentic,
-          wallpaperId: savePostInfo.wallpaper.id,
-        },
-      },
-    });
-
-    isSaved = !!save;
-  }
-
   return (
     <Card className="p-0 shadow dark:shadow-none">
       <CardHeader className="group relative overflow-hidden p-0">
@@ -49,7 +33,7 @@ const SavedWallpaperCard = async ({
             alt={savePostInfo.wallpaper.title}
             height={savePostInfo.wallpaper.height ?? 800}
             width={savePostInfo.wallpaper.width ?? 1200}
-            className="h-[220px] w-full object-cover"
+            className="h-55 w-full object-cover"
           />
         </Link>
 
@@ -71,7 +55,7 @@ const SavedWallpaperCard = async ({
           <SaveButton
             buttonVariant="secondary"
             wallpaperId={savePostInfo.wallpaper.id}
-            initialSaved={isSaved}></SaveButton>
+            initialSaved={initialSaved}></SaveButton>
 
           <Button
             size="icon"

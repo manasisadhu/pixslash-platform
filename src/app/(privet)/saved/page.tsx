@@ -50,13 +50,15 @@ const page = async () => {
     },
   });
 
+  const isSaved = true;
+
   return (
     <section className="shm grid grid-cols-1 gap-4 px-6 pt-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-2">
       {getSavePost.map((post) => (
         <SavedWallpaperCard
           key={post.wallpaper.id}
           savePostInfo={post}
-          isAuthentic={session?.user.id}
+          initialSaved={isSaved}
         />
       ))}
     </section>
