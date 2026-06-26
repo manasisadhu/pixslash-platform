@@ -5,7 +5,7 @@ import prisma from "@/lib/database/dbClient";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
-const deleteComment = async (commentId: string, wallpaperId: string) => {
+const deleteComment = async (commentId: string) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -18,28 +18,40 @@ const deleteComment = async (commentId: string, wallpaperId: string) => {
       };
     }
 
-    const result = await prisma.comment.deleteMany({
+    // Find the comment first and get the real wallpaperId
+    const comment = await prisma.comment.findFirst({
       where: {
         id: commentId,
-        userId: session.user.id, // Only delete own comment
+        userId: session.user.id,
+      },
+      select: {
+        wallpaperId: true,
       },
     });
 
-    if (result.count === 0) {
+    if (!comment) {
       return {
         isSuccess: false,
-        message: "Comment not found or you are not authorized to delete it.",
+        message: "Comment not found.",
       };
     }
 
-    revalidatePath(`/photo/${wallpaperId}`);
+    // Delete comment
+    await prisma.comment.delete({
+      where: {
+        id: commentId,
+      },
+    });
+
+    // Revalidate the actual wallpaper page
+    revalidatePath(`/photo/${comment.wallpaperId}`);
 
     return {
       isSuccess: true,
-      message: "Comment deleted successfully.",
+      message: "Comment deleted.",
     };
   } catch (error) {
-    console.error("Delete Comment Error:", error);
+    console.error(error);
 
     return {
       isSuccess: false,

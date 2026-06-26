@@ -279,10 +279,7 @@ const WallpaperDetailsCard = ({
                       </DropdownMenuTrigger>
 
                       <DropdownMenuContent>
-                        <DeleteCommentButton
-                          commentId={c.id}
-                          wallpaperId={getDetails.id}
-                        />
+                        <DeleteCommentButton commentId={c.id} />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}

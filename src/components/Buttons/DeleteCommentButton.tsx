@@ -10,23 +10,16 @@ import { Spinner } from "../shadcnui/spinner";
 
 type DeleteCommentButtonProps = {
   commentId: string;
-  wallpaperId: string;
 };
 
-const DeleteCommentButton = ({
-  commentId,
-  wallpaperId,
-}: DeleteCommentButtonProps) => {
+const DeleteCommentButton = ({ commentId }: DeleteCommentButtonProps) => {
   const { refresh } = useRouter();
   const [loading, setLoading] = useState(false);
   const deleteCommentHandler = async () => {
     setLoading(true);
 
     try {
-      const { isSuccess, message } = await deleteComment(
-        commentId,
-        wallpaperId,
-      );
+      const { isSuccess, message } = await deleteComment(commentId);
 
       if (!isSuccess) {
         toast.error(message);
