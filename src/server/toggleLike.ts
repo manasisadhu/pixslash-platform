@@ -17,6 +17,21 @@ const toggleLike = async (wallpaperId: string) => {
       };
     }
 
+    // Validate wallpaper exists and is public
+    const wallpaper = await prisma.wallpaper.findFirst({
+      where: {
+        id: wallpaperId,
+        isPublic: true,
+      },
+    });
+
+    if (!wallpaper) {
+      return {
+        success: false,
+        message: "Wallpaper not found.",
+      };
+    }
+
     const existingLike = await prisma.like.findUnique({
       where: {
         userId_wallpaperId: {
