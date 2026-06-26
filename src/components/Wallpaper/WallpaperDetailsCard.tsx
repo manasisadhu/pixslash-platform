@@ -3,18 +3,20 @@
 import { authClient } from "@/lib/auth-client";
 import formatFileSize from "@/lib/formatFileSize";
 import { WallpaperDetailsCardType } from "@/lib/type";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import {
-  BookmarkIcon,
   ChevronsUpDownIcon,
   DownloadIcon,
-  HeartIcon,
+  EllipsisVerticalIcon,
   InfoIcon,
   User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import DeleteCommentButton from "../Buttons/DeleteCommentButton";
+import LikeButton from "../Buttons/LikeButton";
+import SaveButton from "../Buttons/SaveButton";
 import CommentBox from "../Dashboard/CommentBox";
 import UserAvatar from "../Dashboard/UserAvatar";
 import { Button, buttonVariants } from "../shadcnui/button";
@@ -43,13 +45,20 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../shadcnui/tooltip";
 
 type WallpaperDetailsCardProps = {
   getDetails: WallpaperDetailsCardType;
+  isLiked: boolean;
+  isSaved: boolean;
 };
 
-const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
+const WallpaperDetailsCard = ({
+  getDetails,
+  isSaved,
+  isLiked,
+}: WallpaperDetailsCardProps) => {
   const formattedFileSize = formatFileSize(getDetails.fileSize ?? 1024);
   const { data, isPending } = authClient.useSession();
   const user = data?.user;
   const [open, setOpen] = useState(false);
+
   return (
     <Card className="py-0">
       <CardHeader className="flex items-center justify-between pt-4">
@@ -110,33 +119,20 @@ const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
           {/* wallpaper card features  */}
           <div className="flex items-center gap-2 md:ml-auto">
             {/* like system  */}
-            <Tooltip>
-              <Button
-                variant="outline"
-                aria-label="Like Wallpaper"
-                className="flex items-center gap-2 rounded-full px-3 backdrop-blur-xl"
-                render={
-                  <TooltipTrigger>
-                    <HeartIcon className="h-4 w-4" />
-                    <span className="text-sm font-semibold">
-                      {getDetails._count.likes.toLocaleString()}
-                    </span>
-                  </TooltipTrigger>
-                }></Button>
-              <TooltipContent>
-                <p>I love this</p>
-              </TooltipContent>
-            </Tooltip>
+            <LikeButton
+              wallpaperId={getDetails.id}
+              initialCount={getDetails._count.likes}
+              initialLiked={isLiked}
+              tooltipContent={<p>I love This</p>}
+            />
 
             {/* save system  */}
-            <Button
-              size="icon"
-              variant="outline"
-              aria-label="Save wallpaper"
-              className="bg-background/90 flex w-auto gap-1 rounded-full px-4 backdrop-blur-md">
-              <BookmarkIcon className="h-4 w-4" />
-              <span className="text-sm font-semibold">Save</span>
-            </Button>
+            <SaveButton
+              buttonContent="Save"
+              buttonVariant="outline"
+              wallpaperId={getDetails.id}
+              initialSaved={isSaved}
+            />
 
             {/* information system  */}
             <DropdownMenu>
@@ -229,22 +225,22 @@ const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
             {isPending ?
               <Skeleton className="h-8 w-8 rounded-full" />
             : !user ?
-              <div className="flex items-center gap-2">
-                <div className="bg-accent rounded-full px-2 py-2">
+              <div className="flex gap-2">
+                <div className="bg-accent h-10 w-10 rounded-full px-2 py-2">
                   <User />
                 </div>
                 <div className="w-full">
-                  <CommentBox />
+                  <CommentBox wallpaperId={getDetails.id} />
                 </div>
               </div>
-            : <div className="flex items-center gap-2">
+            : <div className="flex gap-2">
                 <UserAvatar
                   name={user.name}
                   image={user.image}
-                  size="sm"
+                  size="default"
                 />
 
-                <CommentBox />
+                <CommentBox wallpaperId={getDetails.id} />
               </div>
             }
           </div>
@@ -254,23 +250,39 @@ const WallpaperDetailsCard = ({ getDetails }: WallpaperDetailsCardProps) => {
               return (
                 <div
                   key={c.id}
-                  className="flex items-center gap-2 rounded-lg bg-white p-2 shadow-md dark:bg-black/95">
-                  <div className="">
+                  className="flex items-center justify-between gap-2 rounded-lg bg-white p-2 shadow-md dark:bg-black/95">
+                  <div className="flex gap-3">
                     <UserAvatar
                       image={c.user.image}
                       name={c.user.name}
                       size="default"
                     />
+
+                    <div className="">
+                      <CardTitle className="text-sm">
+                        {c.user.name}{" "}
+                        <span className="text-[12px] font-normal text-black/55 dark:text-white/55">
+                          {formatDistanceToNowStrict(c.createdAt, {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </CardTitle>
+
+                      <CardDescription>{c.opinion}</CardDescription>
+                    </div>
                   </div>
-                  <div className="">
-                    <CardTitle className="text-sm">
-                      {c.user.name}{" "}
-                      <span className="text-[12px] font-normal text-black/55 dark:text-white/55">
-                        {formatDistanceToNow(c.createdAt, { addSuffix: true })}
-                      </span>
-                    </CardTitle>
-                    <CardDescription>{c.opinion}</CardDescription>
-                  </div>
+
+                  {data?.session.userId === c.user.id && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <EllipsisVerticalIcon size={16} />
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent>
+                        <DeleteCommentButton commentId={c.id} />
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
               );
             })}

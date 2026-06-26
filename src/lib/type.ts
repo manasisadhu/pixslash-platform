@@ -2,7 +2,7 @@ import { Prisma } from "@generated/prisma/client";
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 import z from "zod";
-import { loginSchema, registerSchema } from "./zodSchema";
+import { commentSchema, loginSchema, registerSchema } from "./zodSchema";
 
 export type RootLayoutProps = Readonly<{
   children: ReactNode;
@@ -15,6 +15,8 @@ export type LayoutChildrenProps = {
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
+
+export type CommentSchemaType = z.infer<typeof commentSchema>;
 
 export type SideBarNavItemType = {
   label: string;
@@ -54,7 +56,6 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
     thumbnailUrl: true;
     updatedAt: true;
     categoryId: true;
-    id: true;
   };
 
   include: {
@@ -95,6 +96,7 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
 
         user: {
           select: {
+            id: true;
             name: true;
             image: true;
           };
@@ -106,6 +108,40 @@ export type WallpaperDetailsCardType = Prisma.WallpaperGetPayload<{
       select: {
         likes: true;
         comments: true;
+      };
+    };
+  };
+}>;
+
+export type SavedWallpaperCardType = Prisma.SavedPostGetPayload<{
+  orderBy: [
+    {
+      createdAt: "desc";
+    },
+    {
+      id: "desc";
+    },
+  ];
+  select: {
+    createdAt: true;
+
+    wallpaper: {
+      select: {
+        id: true;
+        imageUrl: true;
+        height: true;
+        width: true;
+        title: true;
+        description: true;
+        slug: true;
+
+        user: {
+          select: {
+            id: true;
+            image: true;
+            name: true;
+          };
+        };
       };
     };
   };

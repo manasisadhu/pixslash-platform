@@ -1,7 +1,9 @@
 import { buttonVariants } from "@/components/shadcnui/button";
 import WallpaperDetailsCard from "@/components/Wallpaper/WallpaperDetailsCard";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
 import { XIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,7 +24,6 @@ const getWallPaper = async (imgId: string) => {
       thumbnailUrl: true,
       updatedAt: true,
       categoryId: true,
-      id: true,
     },
 
     include: {
@@ -63,6 +64,7 @@ const getWallPaper = async (imgId: string) => {
 
           user: {
             select: {
+              id: true,
               name: true,
               image: true,
             },
@@ -138,8 +140,41 @@ const page = async ({ params }: PageProps) => {
   const { imgId } = await params;
   const wallpaper = await getWallPaper(imgId);
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   if (!wallpaper) {
     notFound();
+  }
+
+  let isLiked = false;
+
+  if (session?.user?.id) {
+    const like = await prisma.like.findUnique({
+      where: {
+        userId_wallpaperId: {
+          userId: session.user.id,
+          wallpaperId: wallpaper.id,
+        },
+      },
+    });
+    isLiked = !!like;
+  }
+
+  let isSaved = false;
+
+  if (session?.user.id) {
+    const save = await prisma.savedPost.findUnique({
+      where: {
+        userId_wallpaperId: {
+          userId: session.user.id,
+          wallpaperId: wallpaper.id,
+        },
+      },
+    });
+
+    isSaved = !!save;
   }
 
   return (
@@ -149,8 +184,13 @@ const page = async ({ params }: PageProps) => {
         className={buttonVariants({ variant: "ghost" })}>
         <XIcon />
       </Link>
+
       <div className="w-full">
-        <WallpaperDetailsCard getDetails={wallpaper} />
+        <WallpaperDetailsCard
+          getDetails={wallpaper}
+          isLiked={isLiked}
+          isSaved={isSaved}
+        />
       </div>
     </section>
   );
