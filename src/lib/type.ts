@@ -2,7 +2,12 @@ import { Prisma } from "@generated/prisma/client";
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 import z from "zod";
-import { commentSchema, loginSchema, registerSchema } from "./zodSchema";
+import {
+  commentSchema,
+  loginSchema,
+  registerSchema,
+  wallpaperUploadSchema,
+} from "./zodSchema";
 
 export type RootLayoutProps = Readonly<{
   children: ReactNode;
@@ -17,6 +22,8 @@ export type RegisterSchemaType = z.infer<typeof registerSchema>;
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export type CommentSchemaType = z.infer<typeof commentSchema>;
+
+export type WallpaperUploadSchemaType = z.infer<typeof wallpaperUploadSchema>;
 
 export type SideBarNavItemType = {
   label: string;

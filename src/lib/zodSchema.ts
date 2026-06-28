@@ -44,3 +44,20 @@ export const commentSchema = z.object({
     .min(4, "Comment is too short.")
     .max(300, "Comment is too long."),
 });
+
+export const wallpaperUploadSchema = z.object({
+  title: z.string().trim().min(5, "Title must be atleast 5 charactars"),
+
+  description: z
+    .string()
+    .trim()
+    .min(10, "Description must be atleast 10 charactars")
+    .max(100, "Description must not exceed 100 charactars"),
+
+  tags: z
+    .array(z.string().trim().min(1))
+    .max(10, "Maximum 10 tags are allowed")
+    .default([]),
+
+  category: z.string().min(1, "Please choose your wallpaper category"),
+});
