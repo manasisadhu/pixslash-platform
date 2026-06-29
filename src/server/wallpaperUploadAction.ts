@@ -128,22 +128,10 @@ const wallpaperUploadAction = async (formData: FormData) => {
     await sharp(buffer).toFile(filePath);
 
     // convert tittle in to slug
-    const baseSlug = slugify(title, {
+    const slug = `${slugify(title, {
       lower: true,
       strict: true,
-    });
-
-    let customSlug = baseSlug;
-
-    const checkSlug = await prisma.wallpaper.findUnique({
-      where: {
-        slug: customSlug,
-      },
-    });
-
-    if (checkSlug) {
-      customSlug = `${baseSlug}-${nanoid(6)}`;
-    }
+    })}-${nanoid(6)}`;
 
     // Create wallpaper
     await prisma.wallpaper.create({
@@ -152,7 +140,7 @@ const wallpaperUploadAction = async (formData: FormData) => {
 
         description,
 
-        slug: customSlug,
+        slug,
 
         imageUrl: imgId,
 
