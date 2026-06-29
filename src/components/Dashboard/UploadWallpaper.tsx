@@ -155,12 +155,12 @@ const UploadWallpaper = ({ categoryInfo, tagInfo }: UploadWallpaperType) => {
                 <h3 className="text-lg font-semibold">Upload Wallpaper</h3>
 
                 <p className="text-muted-foreground text-center text-sm">
-                  Drag & drop your image here
-                  <br />
-                  or click to browse
+                  Click to browse your image
                 </p>
 
-                <Button variant="default">
+                <Button
+                  variant="default"
+                  type="button">
                   <FolderIcon /> Choose Image
                 </Button>
 
@@ -363,6 +363,7 @@ const UploadWallpaper = ({ categoryInfo, tagInfo }: UploadWallpaperType) => {
           {/* button section  */}
           <div className="grid w-full gap-2 lg:w-auto lg:grid-cols-2">
             <Button
+              type="button"
               variant="destructive"
               className="w-full"
               onClick={cancelHandler}
