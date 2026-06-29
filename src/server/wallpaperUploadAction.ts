@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
+import { wallpaperUploadSchema } from "@/lib/zodSchema";
 import fs from "fs/promises";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
@@ -23,10 +24,6 @@ const wallpaperUploadAction = async (formData: FormData) => {
     }
 
     const image = formData.get("image") as File;
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const categoryId = formData.get("category") as string;
-    const tags = JSON.parse(formData.get("tags") as string) as string[];
 
     if (!image) {
       return {
@@ -34,6 +31,32 @@ const wallpaperUploadAction = async (formData: FormData) => {
         message: "Please select an image.",
       };
     }
+
+    let rawTags: unknown = [];
+
+    try {
+      rawTags = JSON.parse(String(formData.get("tags") ?? "[]"));
+    } catch {
+      return { isSuccess: false, message: "Invalid tags payload." };
+    }
+
+    const parsedInput = wallpaperUploadSchema.safeParse({
+      title: formData.get("title"),
+      description: formData.get("description"),
+      category: formData.get("category"),
+      tags: rawTags,
+    });
+
+    if (!parsedInput.success) {
+      return {
+        isSuccess: false,
+        message: parsedInput.error.issues[0]?.message ?? "Invalid upload data.",
+      };
+    }
+
+    const { title, description, category: categoryId, tags } = parsedInput.data;
+
+    const uniqueTags = [...new Set(tags)];
 
     // File size validation
     const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -72,6 +95,24 @@ const wallpaperUploadAction = async (formData: FormData) => {
       return {
         isSuccess: false,
         message: "Invalid category.",
+      };
+    }
+
+    const existingTags = await prisma.tag.findMany({
+      where: {
+        id: {
+          in: uniqueTags,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingTags.length !== uniqueTags.length) {
+      return {
+        isSuccess: false,
+        message: "Invalid tags.",
       };
     }
 
@@ -128,7 +169,7 @@ const wallpaperUploadAction = async (formData: FormData) => {
         format: metadata.format,
 
         wallpaperTags: {
-          create: tags.map((tagId) => ({
+          create: uniqueTags.map((tagId) => ({
             tagId,
           })),
         },
