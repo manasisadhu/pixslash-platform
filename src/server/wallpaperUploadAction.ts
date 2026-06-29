@@ -3,12 +3,13 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/database/dbClient";
 import { wallpaperUploadSchema } from "@/lib/zodSchema";
+import { randomUUID } from "crypto";
 import fs from "fs/promises";
-import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import sharp from "sharp";
 import slugify from "slugify";
+
 const wallpaperUploadAction = async (formData: FormData) => {
   let filePath = "";
   try {
@@ -119,7 +120,7 @@ const wallpaperUploadAction = async (formData: FormData) => {
     // Image name
     const extension = metadata.format === "jpeg" ? "jpg" : metadata.format;
 
-    const imgId = `${nanoid(8)}.${extension}`;
+    const imgId = `${randomUUID().slice(0, 8)}.${extension}`;
 
     // image path
     filePath = `./public/wallpapers/${imgId}`;
@@ -131,7 +132,7 @@ const wallpaperUploadAction = async (formData: FormData) => {
     const slug = `${slugify(title, {
       lower: true,
       strict: true,
-    })}-${nanoid(6)}`;
+    })}-${randomUUID().slice(0, 6)}`;
 
     // Create wallpaper
     await prisma.wallpaper.create({
