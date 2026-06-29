@@ -2,7 +2,8 @@
 
 import { WallpaperCardUserProps } from "@/lib/type";
 import Masonry from "react-masonry-css";
-import WallpaperCard from "./WallpaperCard";
+import { WallpaperCard } from "./WallpaperCard";
+
 const breakpointCols = {
   default: 3,
   1024: 3,

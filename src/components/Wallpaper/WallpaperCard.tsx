@@ -1,10 +1,10 @@
 "use client";
 
 import { Award, Bookmark, Download, HeartIcon } from "lucide-react";
-import Image from "next/image";
 
 import { WallpaperCardUserProps } from "@/lib/type";
 import { Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import UserAvatar from "../Dashboard/UserAvatar";
 import { Button } from "../shadcnui/button";
@@ -14,23 +14,30 @@ type WallpaperCardProps = {
   info: WallpaperCardUserProps;
 };
 
-const WallpaperCard = ({ info }: WallpaperCardProps) => {
+export const WallpaperCard = ({ info }: WallpaperCardProps) => {
+  const aspectRatioClass = getAspectRatioClass(info.width, info.height);
+  console.log({
+    title: info.title,
+    width: info.width,
+    height: info.height,
+    aspectRatioClass,
+  });
+
   return (
-    <Card className="group overflow-hidden rounded-xl border-0 p-0 shadow-sm transition-all duration-300 hover:cursor-pointer hover:shadow-xl">
+    <Card
+      className={
+        "group w-full overflow-hidden rounded-xl border-0 p-0 shadow-sm transition-all duration-300 hover:cursor-pointer hover:shadow-xl"
+      }>
       {/* Wallpaper Image */}
-      <CardContent className="relative p-0">
+      <CardContent
+        className={`relative overflow-hidden px-0 py-0 ${aspectRatioClass}`}>
         <Link href={`/photo/${info.slug}` as Route}>
           <Image
-            src={
-              info.imageUrl.startsWith("https") ?
-                info.imageUrl
-              : `/wallpapers/${info.imageUrl}`
-            }
+            src={`/wallpapers/${info.imageUrl}`}
+            fill
             alt={`image - ${info.title}`}
-            width={info.width ?? 1200}
-            height={info.height ?? 800}
             loading="lazy"
-            className="relative z-10 h-auto w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className="h-auto w-full overflow-hidden object-cover"
           />
         </Link>
 
@@ -95,4 +102,19 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
   );
 };
 
-export default WallpaperCard;
+function getAspectRatioClass(
+  width: number | null,
+  height: number | null,
+): string {
+  if (!width || !height) return "aspect-[4/3]";
+
+  const ratio = width / height;
+
+  if (ratio >= 2.1) return "aspect-[21/9]";
+  if (ratio >= 1.7) return "aspect-video";
+  if (ratio >= 1.25) return "aspect-[4/3]";
+  if (ratio >= 0.95) return "aspect-square";
+  if (ratio >= 0.7) return "aspect-[3/4]";
+
+  return "aspect-[9/16]";
+}
