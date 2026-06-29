@@ -21,7 +21,11 @@ const WallpaperCard = ({ info }: WallpaperCardProps) => {
       <CardContent className="relative p-0">
         <Link href={`/photo/${info.slug}` as Route}>
           <Image
-            src={info.imageUrl}
+            src={
+              info.imageUrl.startsWith("https") ?
+                info.imageUrl
+              : `/wallpapers/${info.imageUrl}`
+            }
             alt={`image - ${info.title}`}
             width={info.width ?? 1200}
             height={info.height ?? 800}

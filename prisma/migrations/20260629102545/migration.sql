@@ -53,7 +53,7 @@ CREATE TABLE "verification" (
 -- CreateTable
 CREATE TABLE "wallpaper" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "slug" TEXT,
+    "slug" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "thumbnailUrl" TEXT,
@@ -121,6 +121,16 @@ CREATE TABLE "comment" (
     CONSTRAINT "comment_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "wallpaper" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "savedpost" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "wallpaperId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "savedpost_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "savedpost_wallpaperId_fkey" FOREIGN KEY ("wallpaperId") REFERENCES "wallpaper" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
@@ -174,3 +184,12 @@ CREATE INDEX "comment_wallpaperId_idx" ON "comment"("wallpaperId");
 
 -- CreateIndex
 CREATE INDEX "comment_userId_idx" ON "comment"("userId");
+
+-- CreateIndex
+CREATE INDEX "savedpost_wallpaperId_idx" ON "savedpost"("wallpaperId");
+
+-- CreateIndex
+CREATE INDEX "savedpost_userId_idx" ON "savedpost"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "savedpost_userId_wallpaperId_key" ON "savedpost"("userId", "wallpaperId");

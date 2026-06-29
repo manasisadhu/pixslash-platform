@@ -2,12 +2,15 @@
 
 import { WallpaperUploadSchemaType } from "@/lib/type";
 import { wallpaperUploadSchema } from "@/lib/zodSchema";
+import wallpaperUploadAction from "@/server/wallpaperUploadAction";
 import { Category, Tag } from "@generated/prisma/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FolderIcon, ImagePlusIcon, ShieldCheckIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useFilePicker } from "use-file-picker";
 import { Button } from "../shadcnui/button";
 import {
@@ -50,7 +53,7 @@ const UploadWallpaper = ({ categoryInfo, tagInfo }: UploadWallpaperType) => {
   // states
   const [isFile, setFile] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const { refresh } = useRouter();
   //   form initilization
   const {
     handleSubmit,
@@ -63,8 +66,8 @@ const UploadWallpaper = ({ categoryInfo, tagInfo }: UploadWallpaperType) => {
     defaultValues: {
       title: "",
       description: "",
-      tags: [],
       category: "",
+      tags: [],
     },
 
     mode: "onChange",
@@ -80,16 +83,42 @@ const UploadWallpaper = ({ categoryInfo, tagInfo }: UploadWallpaperType) => {
   });
 
   // submit function
-  const submitWallpaper = async (swData: WallpaperUploadSchemaType) => {
-    await new Promise<void>((r) => setTimeout(r, 5000));
+  const submitWallpaper = async ({
+    title,
+    description,
+    category,
+    tags,
+  }: WallpaperUploadSchemaType) => {
+    if (plainFiles.length === 0) {
+      return toast.error("Please select an image to upload.");
+    }
 
-    console.log(swData);
+    const formData = new FormData();
+
+    // Image
+    formData.append("image", plainFiles[0]);
+
+    // Other fields
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("tags", JSON.stringify(tags));
+
+    const { isSuccess, message } = await wallpaperUploadAction(formData);
+
+    if (!isSuccess) {
+      toast.error(message);
+    } else {
+      toast.success(message);
+      reset();
+      clear();
+      refresh();
+    }
   };
 
   // cancel function
-  const cancelHandler = async () => {
+  const cancelHandler = () => {
     setLoading(true);
-    await new Promise<void>((r) => setTimeout(r, 5000));
     reset();
     clear();
     setLoading(false);

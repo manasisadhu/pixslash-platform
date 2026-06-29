@@ -87,7 +87,11 @@ const WallpaperDetailsCard = ({
             onOpenChange={setOpen}>
             <DialogTrigger>
               <Image
-                src={getDetails.imageUrl ?? ""}
+                src={
+                  getDetails.imageUrl.startsWith("https") ?
+                    getDetails.imageUrl
+                  : `/wallpapers/${getDetails.imageUrl}`
+                }
                 alt={`image - ${getDetails.title}`}
                 height={getDetails.height ?? 800}
                 width={getDetails.width ?? 1200}
@@ -97,12 +101,16 @@ const WallpaperDetailsCard = ({
 
             <DialogContent className="w-full! max-w-5xl! p-0">
               <Image
-                src={getDetails.imageUrl ?? ""}
+                src={
+                  getDetails.imageUrl.startsWith("https") ?
+                    getDetails.imageUrl
+                  : `/wallpapers/${getDetails.imageUrl}`
+                }
                 alt={`image - ${getDetails.title}`}
                 height={getDetails.height ?? 800}
                 width={getDetails.width ?? 1200}
                 onClick={() => setOpen(false)}
-                className="h-fu w-full cursor-zoom-out rounded-lg object-contain"
+                className="h-auto w-full cursor-zoom-out rounded-lg object-contain"
               />
             </DialogContent>
           </Dialog>
@@ -158,6 +166,8 @@ const WallpaperDetailsCard = ({
             </DropdownMenu>
           </div>
         </div>
+
+        <CardTitle>Tags </CardTitle>
 
         <div className="space-x-3">
           {getDetails.wallpaperTags.map((wt) => (

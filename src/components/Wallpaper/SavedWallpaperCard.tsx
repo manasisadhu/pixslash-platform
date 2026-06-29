@@ -29,7 +29,11 @@ const SavedWallpaperCard = async ({
       <CardHeader className="group relative overflow-hidden p-0">
         <Link href={`/photo/${savePostInfo.wallpaper.slug}` as Route}>
           <Image
-            src={savePostInfo.wallpaper.imageUrl}
+            src={
+              savePostInfo.wallpaper.imageUrl.startsWith("https") ?
+                savePostInfo.wallpaper.imageUrl
+              : `/wallpapers/${savePostInfo.wallpaper.imageUrl}`
+            }
             alt={savePostInfo.wallpaper.title}
             height={savePostInfo.wallpaper.height ?? 800}
             width={savePostInfo.wallpaper.width ?? 1200}
