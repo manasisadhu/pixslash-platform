@@ -16,12 +16,6 @@ type WallpaperCardProps = {
 
 export const WallpaperCard = ({ info }: WallpaperCardProps) => {
   const aspectRatioClass = getAspectRatioClass(info.width, info.height);
-  console.log({
-    title: info.title,
-    width: info.width,
-    height: info.height,
-    aspectRatioClass,
-  });
 
   return (
     <Card
@@ -31,12 +25,15 @@ export const WallpaperCard = ({ info }: WallpaperCardProps) => {
       {/* Wallpaper Image */}
       <CardContent
         className={`relative overflow-hidden px-0 py-0 ${aspectRatioClass}`}>
-        <Link href={`/photo/${info.slug}` as Route}>
+        <Link
+          href={`/photo/${info.slug}` as Route}
+          className="absolute inset-0">
           <Image
-            src={`/wallpapers/${info.imageUrl}`}
+            src={`/wallpapers/posts/${info.imageUrl}`}
             fill
             alt={`image - ${info.title}`}
             loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="h-auto w-full overflow-hidden object-cover"
           />
         </Link>
@@ -102,7 +99,7 @@ export const WallpaperCard = ({ info }: WallpaperCardProps) => {
   );
 };
 
-function getAspectRatioClass(
+export function getAspectRatioClass(
   width: number | null,
   height: number | null,
 ): string {

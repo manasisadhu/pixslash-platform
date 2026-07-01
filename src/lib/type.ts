@@ -141,6 +141,7 @@ export type SavedWallpaperCardType = Prisma.SavedPostGetPayload<{
         title: true;
         description: true;
         slug: true;
+        thumbnailUrl: true;
 
         user: {
           select: {

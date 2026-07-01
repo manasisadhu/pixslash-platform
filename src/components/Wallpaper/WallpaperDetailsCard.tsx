@@ -87,11 +87,7 @@ const WallpaperDetailsCard = ({
             onOpenChange={setOpen}>
             <DialogTrigger>
               <Image
-                src={
-                  getDetails.imageUrl.startsWith("https") ?
-                    getDetails.imageUrl
-                  : `/wallpapers/${getDetails.imageUrl}`
-                }
+                src={`/wallpapers/posts/${getDetails.imageUrl}`}
                 alt={`image - ${getDetails.title}`}
                 height={getDetails.height ?? 800}
                 width={getDetails.width ?? 1200}

@@ -31,7 +31,9 @@ const page = async () => {
   });
 
   if (getImages.length === 0) {
-    return <div>No wallpapers found</div>;
+    return (
+      <div className="grid h-dvh place-items-center">No wallpapers found</div>
+    );
   }
 
   return <WallpaperPageContent info={getImages} />;

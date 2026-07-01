@@ -25,15 +25,20 @@ const SavedWallpaperCard = async ({
   initialSaved,
 }: SavedWallpaperCardProps) => {
   return (
-    <Card className="p-0 shadow dark:shadow-none">
-      <CardHeader className="group relative overflow-hidden p-0">
-        <Link href={`/photo/${savePostInfo.wallpaper.slug}` as Route}>
+    <Card className="overflow-hidden p-0 shadow dark:shadow-none">
+      <CardHeader className={`group relative aspect-4/3 overflow-hidden p-0`}>
+        <Link
+          href={`/photo/${savePostInfo.wallpaper.slug}` as Route}
+          className="absolute inset-0">
           <Image
-            src={`/public/wallpaper/${savePostInfo.wallpaper.imageUrl}`}
+            src={
+              `/wallpapers/posts/${savePostInfo.wallpaper.imageUrl}` ||
+              `/wallpapers/thumbnail/${savePostInfo.wallpaper.thumbnailUrl}`
+            }
             alt={savePostInfo.wallpaper.title}
-            height={savePostInfo.wallpaper.height ?? 800}
-            width={savePostInfo.wallpaper.width ?? 1200}
-            className="h-55 w-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="h-full w-full object-cover"
           />
         </Link>
 
