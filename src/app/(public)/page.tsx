@@ -17,7 +17,15 @@ const page = async () => {
     );
   }
 
-  return <MasonryWallpaperGrid wallpapers={getAllWallpapers} />;
+  return (
+    <>
+      {getAllWallpapers.length === 1 ?
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <MasonryWallpaperGrid wallpapers={getAllWallpapers} />
+        </section>
+      : <MasonryWallpaperGrid wallpapers={getAllWallpapers} />}
+    </>
+  );
 };
 
 export default page;

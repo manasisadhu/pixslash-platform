@@ -95,7 +95,7 @@ const SaveButton = ({
         }
       />
 
-      {pathname === "/saved" ? null : (
+      {pathname === "/saved" || pathname === "/contribution" ? null : (
         <TooltipContent>
           {!data ? (showError ?? "Please login first") : "I want to save this"}
         </TooltipContent>

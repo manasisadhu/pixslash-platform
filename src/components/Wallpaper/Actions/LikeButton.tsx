@@ -4,7 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import toggleLike from "@/server/toggleLike";
 import { HeartIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../../shadcnui/button";
 import {
@@ -14,10 +14,17 @@ import {
 } from "../../shadcnui/tooltip";
 
 type LikeButtonProps = {
-  tooltipContent?: ReactNode;
+  tooltipContent?: string;
   wallpaperId: string;
   initialCount: number;
   initialLiked: boolean;
+  buttonVariant:
+    | "default"
+    | "destructive"
+    | "secondary"
+    | "ghost"
+    | "outline"
+    | "link";
 };
 
 const LikeButton = ({
@@ -25,6 +32,7 @@ const LikeButton = ({
   wallpaperId,
   initialCount,
   initialLiked,
+  buttonVariant,
 }: LikeButtonProps) => {
   const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(initialCount);
@@ -79,10 +87,11 @@ const LikeButton = ({
   return (
     <Tooltip>
       <Button
-        variant="outline"
+        variant={buttonVariant}
         aria-label="Like Wallpaper"
         onClick={handleLike}
         disabled={loading}
+        className="bg-background/90 flex items-center gap-2 rounded-full px-3 backdrop-blur-md"
         render={
           <TooltipTrigger>
             <HeartIcon
@@ -93,10 +102,9 @@ const LikeButton = ({
             </span>
           </TooltipTrigger>
         }
-        className="flex items-center gap-2 rounded-full px-3 backdrop-blur-xl"
       />
 
-      {pathname === "/" ? null : (
+      {pathname === "/contribution" || pathname === "/saved" ? null : (
         <TooltipContent>
           {!data ? (showError ?? "Please login first") : tooltipContent}
         </TooltipContent>

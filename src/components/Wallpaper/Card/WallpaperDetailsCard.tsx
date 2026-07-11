@@ -129,10 +129,11 @@ const WallpaperDetailsCard = ({
           <div className="flex items-center gap-2 md:ml-auto">
             {/* like system  */}
             <LikeButton
+              buttonVariant="outline"
               wallpaperId={getDetails.id}
               initialCount={getDetails._count.likes}
               initialLiked={isLiked}
-              tooltipContent={<p>I love This</p>}
+              tooltipContent="I love This"
             />
 
             {/* save system  */}

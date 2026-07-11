@@ -31,6 +31,8 @@ const WallpaperAction = ({
         wallpaperId={wallpaperId}
         initialCount={likesCount}
         initialLiked={isLiked}
+        buttonVariant="secondary"
+        tooltipContent="I love this"
       />
 
       <DownloadButton

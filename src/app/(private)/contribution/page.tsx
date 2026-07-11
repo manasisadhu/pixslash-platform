@@ -45,7 +45,7 @@ const page = async () => {
       )}
 
       {getOwnPost.length === 1 || getOwnPost.length === 2 ?
-        <section className="grid grid-cols-3">
+        <section className="grid grid-cols-1 md:grid-cols-2">
           <MasonryWallpaperGrid wallpapers={getOwnPost} />
         </section>
       : <MasonryWallpaperGrid wallpapers={getOwnPost} />}
